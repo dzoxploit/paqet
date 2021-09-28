@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Organization;
 use App\Models\Connote;
+use Carbon\Carbon;
 
 class PackageController extends Controller
 {
@@ -69,40 +70,44 @@ class PackageController extends Controller
         $transaction->customer_attribute = json_encode($customerattribute);
 
         $connote = new Connote;
+
+        $transaction->connote_id = $connote->nextid();
+
         $connotes[] = [
-            "connote_id" => "f70670b1-c3ef-4caf-bc4f-eefa702092ed",
-            "connote_number": 1,
-            "connote_service": "ECO",
-            "connote_service_price": 70700,
-            "connote_amount": 70700,
-            "connote_code": "AWB00100209082020",
-            "connote_booking_code": "",
-            "connote_order": 326931,
-            "connote_state": "PAID",
-            "connote_state_id": 2,
-            "zone_code_from": "CGKFT",
-            "zone_code_to": "SMG",
-            "surcharge_amount": null,
-                "transaction_id": "d0090c40-539f-479a-8274-899b9970bddc",
-            "actual_weight": 20,
-            "volume_weight": 0,
-            "chargeable_weight": 20,
-            "created_at": "2020-07-15T11:11:12+0700",
-            "updated_at": "2020-07-15T11:11:22+0700",
-            "organization_id": 6,
-            "location_id": "5cecb20b6c49615b174c3e74",
-            "connote_total_package": "3",
-            "connote_surcharge_amount": "0",
-            "connote_sla_day": "4",
-            "location_name": "Hub Jakarta Selatan",
-            "location_type": "HUB",
-            "source_tariff_db": "tariff_customers",
-            "id_source_tariff": "1576868",
-            "pod": null,
-            "history": []
-    
+            "connote_id" => $connote->nextid(),
+            "connote_number" => $request->connote->connote_number,
+            "connote_service" =>  $request->connote->connote_service,
+            "connote_service_price" =>  $request->connote->connote_service_price,
+            "connote_amount" => $request->connote->connote_amount,
+            "connote_code" => $request->connote->connote_code,
+            "connote_order" => $request->connote_corder,
+            "connote_booking_code" => $request->connote->connote_booking_code,
+            "connote_state" => $request->connote->connote_state,
+            "connote_state_id" => $request->connote->connote_state_id,
+            "zone_code_from" => $request->connote->zone_code_from,
+            "zone_code_to" => $request->connote->zone_code_to,
+            "surcharge_amount" => $request->connote->supercharge_amount,
+            "transaction_id" => $request->connote->transaction_id,
+            "actual_weight" => $request->connote->actual_weight,
+            "volume_weight" => $request->connote->volume_weight,
+            "chargeable_weight" => $request->connote->chargeble_weight,
+            "created_at" => Carbon::now(),
+            "updated_at" => Carbon::now(),
+            "organization_id" => $request->organization_id,
+            "location_id" => $request->location_id,
+            "connote_total_package" => $request->connote->connote_total_package,
+            "connote_surcharge_amount" => $request->connote->connote_supercharge_amount,
+            "connote_sla_day" => $request->connote->connote_sla_day,
+            "location_name" => $request->connote->location_name,
+            "location_type" => $request->connote->location_type,
+            "source_tariff_db" => $request->connote->source_tariff_db,
+            "id_source_tariff" => $request->connote->id_source_tariff,
+            "pod" => null,
+            "history" => []
         ];
 
+        $connoted = $connote->create(json_encode($connotes));
+        $transaction->connote = json_encode($connotes);
         $transaction->save();
  
         return response()->json(["package" => $transaction], 201);
