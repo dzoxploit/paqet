@@ -11,7 +11,7 @@ class Connote extends Model
 
     protected $connection = 'mongodb';
     
-    protected $collection = 'connote';
+    protected $collection = 'connotes';
 
     public function nextid()
     {
@@ -32,7 +32,7 @@ class Connote extends Model
 
     private static function getID()
     {
-        $seq = DB::connection('mongodb')->getCollection('connote')->findOneAndUpdate(
+        $seq = DB::connection('mongodb')->getCollection('connotes')->findOneAndUpdate(
             ['ref' => 'ref'],
             ['$inc' => ['seq' => 1]],
             ['new' => true, 'upsert' => true, 'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER]

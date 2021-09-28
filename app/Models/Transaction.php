@@ -31,7 +31,7 @@ class Transaction extends Model
 
     private static function getID()
     {
-        $seq = DB::connection('mongodb')->getCollection('counters')->findOneAndUpdate(
+        $seq = DB::connection('mongodb')->getCollection('transactions')->findOneAndUpdate(
             ['ref' => 'ref'],
             ['$inc' => ['seq' => 1]],
             ['new' => true, 'upsert' => true, 'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER]
